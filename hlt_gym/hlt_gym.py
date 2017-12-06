@@ -3,12 +3,10 @@
 import re
 import os
 import sys
-import json
 import argparse
+import random
 
 import compare_bots
-
-from json.decoder import JSONDecodeError
 
 """hlt_gym.py: An enhanced Halite II gym for comparing bots."""
 
@@ -24,6 +22,9 @@ GYM_MODE = 'gym'
 REPLAY_MODE_DATE = 'date'
 REPLAY_MODE_USER = 'user'
 
+help_str=""
+usage_str=""
+
 def _parse_arguments():
     """
     Simple argparser
@@ -37,15 +38,20 @@ def _parse_arguments():
     parser.add_argument('-b', '--binary', dest='halite_binary', action='store', type=str,
                             help="The halite executable/binary path, used to run the games. If unspecified it will default to looking in the current directory")
 
-    parser.add_argument('-W', '--width', dest='map_width', action='store', type=int, default=240,
+    parser.add_argument('-W', '--width', dest='map_width', action='store', type=int, default=0,
                             help="The map width the simulations will run in")
-    parser.add_argument('-H', '--height', dest='map_height', action='store', type=int, default=160,
+    parser.add_argument('-H', '--height', dest='map_height', action='store', type=int, default=0,
                             help="The map height the simulations will run in")
     parser.add_argument('-i', '--iterations', dest='iterations', action='store', type=int,  default=100,
                             help="Number of games to be run")
     parser.add_argument('-t', '--timeout', dest='timeouts', action='store_true',
                             help="Disable timeouts for bots")
-    return parser.parse_args()
+    return_result=parser.parse_args()
+    global help_str
+    global usage_str
+    help_str=parser.format_help()
+    usage_str=parser.format_usage()
+    return return_result
 
 
 def main():
@@ -65,8 +71,14 @@ def main():
             else:
                 args.halite_binary="./halite"
         if not os.path.isfile(args.halite_binary):
+            sys.stderr.write(usage_str)
             sys.stderr.write("Error: Unable to locate halite binary.\n")
             sys.stderr.write("If it is not in the current directory, did you forget to specify a -b option?")
+            exit(-1)
+        if (args.map_width==0) != (args.map_height==0):
+            sys.stderr.write(usage_str)
+            sys.stderr.write("Error: Map width and height "
+                             "must be specified together.\n")
             exit(-1)
         add_args=list()
         #print(args.__dict__)
