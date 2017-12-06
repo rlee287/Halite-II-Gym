@@ -1,0 +1,9 @@
+# Halite stuff
+
+*.hlt
+*.log
+*.zip
+*.txt
+
+# Python stuff
+__pycache__/

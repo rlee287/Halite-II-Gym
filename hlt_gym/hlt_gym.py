@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+
+import re
+import os
+import sys
+import json
+import argparse
+
+import compare_bots
+
+from json.decoder import JSONDecodeError
+
+"""hlt_gym.py: An enhanced Halite II gym for comparing bots."""
+
+__author__ = "Ryan Lee"
+__copyright__ = "Copyright 2017, Ryan Lee"
+__credits__ = ["Ryan Lee", "Two Sigma"]
+__date__ = "December 4, 2017"
+__license__ = "MIT"
+__status__ = "Production"
+__version__ = "1.5"
+
+GYM_MODE = 'gym'
+REPLAY_MODE_DATE = 'date'
+REPLAY_MODE_USER = 'user'
+
+def _parse_arguments():
+    """
+    Simple argparser
+    :return: parsed arguments if any. Prints help otherwise
+    """
+    parser = argparse.ArgumentParser(description="A Halite II gym for comparing bots.")
+    # .Modes.Gym
+    # parser = add_parser('gym', help='Train your Bot(s)!')
+    parser.add_argument('-r', '--run-command', dest='run_commands', action='append', type=str, required=True,
+                            help="The command to run a specific bot. You may pass either 2 or 4 of these arguments")
+    parser.add_argument('-b', '--binary', dest='halite_binary', action='store', type=str,
+                            help="The halite executable/binary path, used to run the games. If unspecified it will default to looking in the current directory")
+
+    parser.add_argument('-W', '--width', dest='map_width', action='store', type=int, default=240,
+                            help="The map width the simulations will run in")
+    parser.add_argument('-H', '--height', dest='map_height', action='store', type=int, default=160,
+                            help="The map height the simulations will run in")
+    parser.add_argument('-i', '--iterations', dest='iterations', action='store', type=int,  default=100,
+                            help="Number of games to be run")
+    parser.add_argument('-t', '--timeout', dest='timeouts', action='store_true',
+                            help="Disable timeouts for bots")
+    return parser.parse_args()
+
+
+def main():
+    """
+    Main function gets the args input and determines which method to call to handle. Handles exceptions from
+    malformed input.
+    :return: Nothing
+    """
+    try:
+        args = _parse_arguments()
+        if not(len(args.run_commands)==2 or len(args.run_commands)==2):
+            sys.stderr.write("Error: You must specify 2 or 4 bots to compare.\n")
+            exit(-1)
+        if args.halite_binary is None:
+            if sys.platform=="win32":
+                args.halite_binary="halite.exe"
+            else:
+                args.halite_binary="./halite"
+        if not os.path.isfile(args.halite_binary):
+            sys.stderr.write("Error: Unable to locate halite binary.\n")
+            sys.stderr.write("If it is not in the current directory, did you forget to specify a -b option?")
+            exit(-1)
+        add_args=list()
+        #print(args.__dict__)
+        if args.timeouts:
+            add_args.append("-t")
+        compare_bots.play_games(args.halite_binary,
+                                args.map_width, args.map_height,
+                                args.run_commands, args.iterations, " ".join(add_args))
+    except (IndexError, TypeError, ValueError, IOError, FileNotFoundError) as err:
+        sys.stderr.write(str(err) + os.linesep)
+        exit(-1)
+
+
+if __name__ == "__main__":
+    main()
