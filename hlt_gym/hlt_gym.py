@@ -39,7 +39,7 @@ def _parse_arguments():
                             help="The halite executable/binary path, used to run the games. If unspecified it will default to looking in the current directory")
 
     parser.add_argument('-W', '--width', dest='map_width', action='store', type=int, default=0,
-                            help="The map width the simulations will run in")
+                            help="The map width the simulations will run in. If unspecified, the gym will sample randomly from the size distribution used on the game servers")
     parser.add_argument('-H', '--height', dest='map_height', action='store', type=int, default=0,
                             help="The map height the simulations will run in")
     parser.add_argument('-i', '--iterations', dest='iterations', action='store', type=int,  default=100,

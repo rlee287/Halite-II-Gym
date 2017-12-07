@@ -58,16 +58,18 @@ def play_games(binary, map_width, map_height, bot_commands, number_of_runs, addi
     print("Comparing Bots!")
     result = {}
     len_bots=list()
+    is_fixed=True
     #if not(len(bot_commands) == 4 or len(bot_commands) == 2):
     #    raise IndexError("The number of bots specified must be either 2 or 4.")
     for current_run in range(0, number_of_runs):
         if map_width==0 and map_height==0:
+            is_fixed=False
             # Choose randomly based on actual size distribution
             map_sizes = [80, 80, 88, 88, 96, 96, 96, 104, 104, 104, 104,
                          112, 112, 112, 120, 120, 128, 128]
             base_size = random.choice(map_sizes)
-            args.map_width = 3 * base_size
-            args.map_height = 3 * base_size
+            map_width = 3 * base_size
+            map_height = 2 * base_size
 
         match_output = _play_game(binary, map_width, map_height, bot_commands, additional_args)
         winner = _determine_winner(match_output)
