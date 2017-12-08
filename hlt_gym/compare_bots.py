@@ -1,5 +1,6 @@
 import subprocess
 import re
+import random
 
 _WINNING_RANK_STRING = "rank #1"
 _BOT_NAME_REGEX="received from player ., .+"
@@ -76,18 +77,29 @@ def play_games(binary, map_width, map_height, bot_commands, number_of_runs, addi
         winner=winner.rstrip(',')
         if len(len_bots)==0:
             list_of_players = _find_names(match_output)
-            len_bots=[len(s) for s in list_of_players]
-            string_title="| #   |"+"|".join(list_of_players)+"|"
+            numbered_list=list_of_players[:]
+            for index in range(len(numbered_list)):
+                numbered_list[index]="#"+str(index)+":"+numbered_list[index]
+            for index in range(len(list_of_players)):
+                numbered_list.append(" #{} %    ".format(index))
+            len_bots=[len(s) for s in numbered_list]
+            string_title="| #   |"+"|".join(numbered_list)+"|"
             print("-"*len(string_title))
             print(string_title)
             print("="*len(string_title))
         result[winner] = result.setdefault(winner, 0) + 1
         print("| "+str(current_run+1).ljust(4)+"|",end="")
-        #import pdb;pdb.set_trace()
-        for i,length in enumerate(len_bots):
+        for i in range(len(list_of_players)):
             key="#"+str(i)
             num_wins=result.get(key,0)
-            print((" "+str(num_wins)).ljust(length)+"|",end="")
+            len_to_pad=len(numbered_list[i])
+            print((" "+str(num_wins)).ljust(len_to_pad)+"|",end="")
+        for i in range(len(list_of_players)):
+            key="#"+str(i)
+            num_wins=result.get(key,0)
+            percentage=round(num_wins/(current_run+1),4)
+            len_to_pad=len(numbered_list[i+len(list_of_players)])
+            print((" "+"{:.2%}".format(percentage)).ljust(len_to_pad)+"|",end="")
         print("\n",end="")
         print("-"*len(string_title))
         #print("Finished {} runs.".format(current_run + 1))
