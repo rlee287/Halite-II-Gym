@@ -4,7 +4,6 @@ import re
 import os
 import sys
 import argparse
-import random
 
 import compare_bots
 
@@ -60,36 +59,32 @@ def main():
     malformed input.
     :return: Nothing
     """
-    try:
-        args = _parse_arguments()
-        if not(len(args.run_commands)==2 or len(args.run_commands)==2):
-            sys.stderr.write("Error: You must specify 2 or 4 bots to compare.\n")
-            exit(-1)
-        if args.halite_binary is None:
-            if sys.platform=="win32":
-                args.halite_binary="halite.exe"
-            else:
-                args.halite_binary="./halite"
-        if not os.path.isfile(args.halite_binary):
-            sys.stderr.write(usage_str)
-            sys.stderr.write("Error: Unable to locate halite binary.\n")
-            sys.stderr.write("If it is not in the current directory, did you forget to specify a -b option?")
-            exit(-1)
-        if (args.map_width==0) != (args.map_height==0):
-            sys.stderr.write(usage_str)
-            sys.stderr.write("Error: Map width and height "
-                             "must be specified together.\n")
-            exit(-1)
-        add_args=list()
-        #print(args.__dict__)
-        if args.timeouts:
-            add_args.append("-t")
-        compare_bots.play_games(args.halite_binary,
-                                args.map_width, args.map_height,
-                                args.run_commands, args.iterations, " ".join(add_args))
-    except (IndexError, TypeError, ValueError, IOError, FileNotFoundError) as err:
-        sys.stderr.write(str(err) + os.linesep)
+    args = _parse_arguments()
+    if not(len(args.run_commands)==2 or len(args.run_commands)==2):
+        sys.stderr.write("Error: You must specify 2 or 4 bots to compare.\n")
         exit(-1)
+    if args.halite_binary is None:
+        if sys.platform=="win32":
+            args.halite_binary="halite.exe"
+        else:
+            args.halite_binary="./halite"
+    if not os.path.isfile(args.halite_binary):
+        sys.stderr.write(usage_str)
+        sys.stderr.write("Error: Unable to locate halite binary.\n")
+        sys.stderr.write("If it is not in the current directory, did you forget to specify a -b option?")
+        exit(-1)
+    if (args.map_width==0) != (args.map_height==0):
+        sys.stderr.write(usage_str)
+        sys.stderr.write("Error: Map width and height "
+                         "must be specified together.\n")
+        exit(-1)
+    add_args=list()
+    #print(args.__dict__)
+    if args.timeouts:
+        add_args.append("-t")
+    compare_bots.play_games(args.halite_binary,
+                            args.map_width, args.map_height,
+                            args.run_commands, args.iterations, " ".join(add_args))
 
 
 if __name__ == "__main__":
