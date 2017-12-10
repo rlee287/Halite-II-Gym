@@ -6,5 +6,5 @@ setup(name='hlt_gym',
       author='Ryan Lee',
       author_email='rlee287@yahoo.com',
       license='MIT',
-      packages=['hlt_client'],
+      packages=['hlt_gym'],
       zip_safe=False)
