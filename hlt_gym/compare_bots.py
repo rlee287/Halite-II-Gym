@@ -102,6 +102,13 @@ def play_games(binary, map_width, map_height, bot_commands, number_of_runs, addi
             print((" "+"{:.2%}".format(percentage)).ljust(len_to_pad)+"|",end="")
         print("\n",end="")
         print("-"*len(string_title))
-        #print("Finished {} runs.".format(current_run + 1))
-        #print("Win Ratio: {}".format(result))
-    #print("="*len(string_title))
+    max_num_win_key=""
+    max_num_win_val=0
+    for i in range(len(list_of_players)):
+        key="#"+str(i)
+        num_wins=result.get(key,0)
+        if max_num_win_val<num_wins:
+            max_num_win_key=key
+            max_num_win_val=num_wins
+    print("Bot "+max_num_win_key+
+          " won the most, winning {}/{} times.".format(max_num_win_val,number_of_runs))
