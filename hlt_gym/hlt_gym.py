@@ -82,9 +82,10 @@ def main():
     #print(args.__dict__)
     if args.timeouts:
         add_args.append("-t")
-    compare_bots.play_games(args.halite_binary,
-                            args.map_width, args.map_height,
-                            args.run_commands, args.iterations, " ".join(add_args))
+    if args.map_height!=0 and args.map_width!=0:
+        add_args.append("-d \"{} {}\"".format(args.map_width, args.map_height))
+    compare_bots.play_games(args.halite_binary, args.run_commands, 
+                            args.iterations, " ".join(add_args))
 
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ def _find_names(game_result):
         final_list.append(final_str[:-1])
     return final_list
 
-def _play_game(binary, map_width, map_height, bot_commands, additional_args):
+def _play_game(binary, bot_commands, additional_args):
     """
     Plays one game considering the specified bots and the game and map constraints.
     :param binary: The halite binary
@@ -37,16 +37,16 @@ def _play_game(binary, map_width, map_height, bot_commands, additional_args):
     :param bot_commands: The commands to run each of the bots
     :return: The game's result string
     """
-    game_run_command = '\"{}\" -d "{} {}"'.format(binary, map_width, map_height)
+    game_run_command = '\"{}\" '.format(binary)
     game_run_command += additional_args
     game_run_command += " -- "
     for bot_command in bot_commands:
         game_run_command += " \"{}\"".format(bot_command)
-    #print(game_run_command)
+    print(game_run_command)
     return subprocess.check_output(game_run_command, shell=True).decode()
 
 
-def play_games(binary, map_width, map_height, bot_commands, number_of_runs, additional_args):
+def play_games(binary, bot_commands, number_of_runs, additional_args):
     """
     Runs number_of_runs games using the designated bots and binary, recording the tally of wins per player
     :param binary: The Halite binary.
@@ -59,20 +59,10 @@ def play_games(binary, map_width, map_height, bot_commands, number_of_runs, addi
     print("Comparing Bots!")
     result = {}
     len_bots=list()
-    is_fixed=True
     #if not(len(bot_commands) == 4 or len(bot_commands) == 2):
     #    raise IndexError("The number of bots specified must be either 2 or 4.")
     for current_run in range(0, number_of_runs):
-        if map_width==0 and map_height==0:
-            is_fixed=False
-            # Choose randomly based on actual size distribution
-            map_sizes = [80, 80, 88, 88, 96, 96, 96, 104, 104, 104, 104,
-                         112, 112, 112, 120, 120, 128, 128]
-            base_size = random.choice(map_sizes)
-            map_width = 3 * base_size
-            map_height = 2 * base_size
-
-        match_output = _play_game(binary, map_width, map_height, bot_commands, additional_args)
+        match_output = _play_game(binary, bot_commands, additional_args)
         winner = _determine_winner(match_output)
         winner=winner.rstrip(',')
         if len(len_bots)==0:
