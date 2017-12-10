@@ -1,0 +1,8 @@
+language: python
+python:
+ - 3.6
+script:
+ - tempclone=$(mktemp -p . -d "doc_build_clone.XXXXXXXX")
+ - python setup.py develop
+ - pushd $tempclone && hlt_gym.py --help && popd
+ - rm -r $tempclone
