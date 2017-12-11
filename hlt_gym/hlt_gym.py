@@ -60,7 +60,7 @@ def main():
     :return: Nothing
     """
     args = _parse_arguments()
-    if not(len(args.run_commands)==2 or len(args.run_commands)==2):
+    if not(len(args.run_commands)==2 or len(args.run_commands)==4):
         sys.stderr.write("Error: You must specify 2 or 4 bots to compare.\n")
         exit(-1)
     if args.halite_binary is None:
