@@ -3,7 +3,7 @@ import re
 import random
 
 _WINNING_RANK_STRING = "rank #1"
-_BOT_NAME_REGEX="received from player ., .+"
+_BOT_NAME_REGEX="received from player \\d, .+"
 _BOT_NAME_POSITION = 6
 _SPACE_DELIMITER = ' '
 _BOT_ID_POSITION = 1
@@ -22,10 +22,13 @@ def _find_names(game_result):
     final_list=list()
     iterate=(line for line in game_result.splitlines() if re.compile(_BOT_NAME_REGEX).search(line))
     for item in iterate:
+        number=int(item.split(_SPACE_DELIMITER)[5].rstrip(","))
         # Properly handle bots whose name includes spaces
         final_str=' '.join(item.split(_SPACE_DELIMITER)[6:])
+        while number>=len(final_list):
+            final_list.append("")
         # Remove last period
-        final_list.append(final_str[:-1])
+        final_list[number]=final_str[:-1]
     return final_list
 
 def _play_game(binary, bot_commands, additional_args):
@@ -42,7 +45,6 @@ def _play_game(binary, bot_commands, additional_args):
     game_run_command += " -- "
     for bot_command in bot_commands:
         game_run_command += " \"{}\"".format(bot_command)
-    print(game_run_command)
     return subprocess.check_output(game_run_command, shell=True).decode()
 
 
