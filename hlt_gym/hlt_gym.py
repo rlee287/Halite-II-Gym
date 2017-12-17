@@ -45,6 +45,8 @@ def _parse_arguments():
                             help="Number of games to be run")
     parser.add_argument('-t', '--timeout', dest='timeouts', action='store_true',
                             help="Disable timeouts for bots")
+    parser.add_argument('--noreplay', dest='noreplay', action='store_true',
+                            help="Disable saving of replays")
     return_result=parser.parse_args()
     global help_str
     global usage_str
@@ -84,6 +86,8 @@ def main():
         add_args.append("-t")
     if args.map_height!=0 and args.map_width!=0:
         add_args.append("-d \"{} {}\"".format(args.map_width, args.map_height))
+    if args.noreplay:
+        add_args.append("--noreplay")
     compare_bots.play_games(args.halite_binary, args.run_commands, 
                             args.iterations, " ".join(add_args))
 
