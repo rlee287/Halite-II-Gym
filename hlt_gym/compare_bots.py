@@ -1,6 +1,7 @@
 import subprocess
 import re
 import random
+from binom_confidence import *
 
 _WINNING_RANK_STRING = "rank #1"
 _BOT_NAME_REGEX="received from player \\d, .+"
@@ -94,13 +95,29 @@ def play_games(binary, bot_commands, number_of_runs, additional_args):
             print((" "+"{:.2%}".format(percentage)).ljust(len_to_pad)+"|",end="")
         print("\n",end="")
         print("-"*len(string_title))
-    max_num_win_key=""
+    max_num_win_key=-1
     max_num_win_val=0
     for i in range(len(list_of_players)):
         key="#"+str(i)
         num_wins=result.get(key,0)
+        print(key,num_wins)
         if max_num_win_val<num_wins:
-            max_num_win_key=key
+            max_num_win_key=i
             max_num_win_val=num_wins
-    print("Bot "+max_num_win_key+
+    i-=1
+    #print(numbered_list)
+    #print(numbered_list[i])
+    print("Bot "+numbered_list[i]+
           " won the most, winning {}/{} times.".format(max_num_win_val,number_of_runs))
+    stats=True
+    if stats:
+        # Null hypothesis is that winning bot is equal to or worse than others
+        topbound=wilson_binom_top(Z_95p,number_of_runs,1/len(list_of_players))
+        topbound*=number_of_runs
+        print("95% confidence threshold (Wilson approximation to binomial confidence interval) is {:.0f}.".format(topbound))
+        if max_num_win_val >= topbound:
+            print("There is a less than 5% chance of the winning bot performing this well assuming it is equally capable as the other bots.")
+            print("We can conclude that the winning bot is significantly better than the other bots.")
+        else:
+            print("There is a greater than 5% chance of the winning bot performing this well assuming it is equally capable as the other bots.")
+            print("We cannot conclude that the winning bot is significantly better than the other bots.")
