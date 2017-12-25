@@ -116,8 +116,8 @@ def play_games(binary, bot_commands, number_of_runs, additional_args):
         topbound*=number_of_runs
         print("95% confidence threshold (Wilson approximation to binomial confidence interval) is {:.0f}.".format(topbound))
         if max_num_win_val >= topbound:
-            print("There is a less than 5% chance of the winning bot performing this well assuming it is equally capable as the other bots.")
-            print("We can conclude that the winning bot is significantly better than the other bots.")
+            print("There is a less than 5% chance of the winning bot performing this well assuming it is equally capable as the other bot(s).")
+            print("We can conclude that the winning bot is significantly better than the other bot(s).")
         else:
-            print("There is a greater than 5% chance of the winning bot performing this well assuming it is equally capable as the other bots.")
-            print("We cannot conclude that the winning bot is significantly better than the other bots.")
+            print("There is a greater than 5% chance of the winning bot performing this well assuming it is equally capable as the other bot(s).")
+            print("We cannot conclude that the winning bot is significantly better than the other bot(s).")
