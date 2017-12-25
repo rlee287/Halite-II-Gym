@@ -100,14 +100,14 @@ def play_games(binary, bot_commands, number_of_runs, additional_args):
     for i in range(len(list_of_players)):
         key="#"+str(i)
         num_wins=result.get(key,0)
-        print(key,num_wins)
         if max_num_win_val<num_wins:
             max_num_win_key=i
             max_num_win_val=num_wins
-    i-=1
-    #print(numbered_list)
-    #print(numbered_list[i])
-    print("Bot "+numbered_list[i]+
+        print(key,num_wins)
+        print(max_num_win_val)
+    print(numbered_list)
+    print(numbered_list[max_num_win_key])
+    print("Bot "+numbered_list[max_num_win_key]+
           " won the most, winning {}/{} times.".format(max_num_win_val,number_of_runs))
     stats=True
     if stats:
