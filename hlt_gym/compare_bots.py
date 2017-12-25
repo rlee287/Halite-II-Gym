@@ -103,10 +103,10 @@ def play_games(binary, bot_commands, number_of_runs, additional_args):
         if max_num_win_val<num_wins:
             max_num_win_key=i
             max_num_win_val=num_wins
-        print(key,num_wins)
-        print(max_num_win_val)
-    print(numbered_list)
-    print(numbered_list[max_num_win_key])
+        #print(key,num_wins)
+        #print(max_num_win_val)
+    #print(numbered_list)
+    #print(numbered_list[max_num_win_key])
     print("Bot "+numbered_list[max_num_win_key]+
           " won the most, winning {}/{} times.".format(max_num_win_val,number_of_runs))
     stats=True
@@ -114,6 +114,7 @@ def play_games(binary, bot_commands, number_of_runs, additional_args):
         # Null hypothesis is that winning bot is equal to or worse than others
         topbound=wilson_binom_top(Z_95p,number_of_runs,1/len(list_of_players))
         topbound*=number_of_runs
+        print("")
         print("95% confidence threshold (Wilson approximation to binomial confidence interval) is {:.0f}.".format(topbound))
         if max_num_win_val >= topbound:
             print("There is a less than 5% chance of the winning bot performing this well assuming it is equally capable as the other bot(s).")
