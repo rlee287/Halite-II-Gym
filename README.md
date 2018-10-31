@@ -1,3 +1,5 @@
+### If you are looking for a Halite III gym, please see https://github.com/rlee287/Halite-III-Bot-Comparator.
+
 # Halite II Gym
 
 This is an improved version of the gym that ships with the hlt client tool. This tool does not have a dependency on the `zstd` module.
